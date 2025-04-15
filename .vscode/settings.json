@@ -1,5 +1,12 @@
 {
-  "ruby.rubocop.executePath": "./ruby",
+  "ruby.rubocop.executePath": "./ruby/object_orient",
   "ruby.useBundler": true,
-  "ruby.rubocop.useBundler": true
+  "ruby.rubocop.useBundler": true,
+  "ruby.lint": {
+    "rubocop": true
+  },
+  "ruby.rubocop.onSave": true,
+  "ruby.rubocop.path": "/Users/m.ori/.asdf/shims/rubocop",
+  "ruby.rubocop.command": "bundle",
+  "ruby.rubocop.args": ["exec", "rubocop"]
 } 
