@@ -5,6 +5,8 @@ class PaymentsController < ApplicationController
   before_action :set_cart, only: %i[checkout success]
 
   def checkout
+    redirect_to carts_path and return if @cart.line_items.empty?
+
     line_items = []
 
     @cart.line_items.each do |line_item|
