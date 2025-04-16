@@ -1,44 +1,189 @@
 <%= render 'layouts/header' %>
 
-<div class="container">
-  <div class="cart__title">
+<div class="container py-4">
+  <div class="cart__title mb-4">
     カート
   </div>
 
   <% if @cart.line_items.count > 0 %>
-    <div class="cart-wrapper">
-      <% @cart.line_items.each do |line_item| %>
-        <div class="card mb-3">
-          <div class="row" style="flex-wrap: unset">
-            <%= image_tag line_item.product.image, class: "product-cart-img" %>
-            <div class="card-body">
-              <div class="card-product-name col-6">
-                <%= line_item.product.name %>
-                <%# <%= line_item.product.price %>
+    <div class="row">
+      <div class="col-12">
+        <% @cart.line_items.each do |line_item| %>
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="row g-0 align-items-center">
+              <div class="col-3 col-sm-2">
+                <%= image_tag line_item.product.image, class: "product-cart-img" %>
               </div>
-              <div class="card-quantity col-2">
-                <%= line_item.quantity %> 個
+              <div class="col-9 col-sm-10">
+                <div class="card-body p-2 p-sm-3">
+                  <div class="row g-2 align-items-center">
+                    <div class="col-12 col-sm-5">
+                      <h5 class="card-title mb-0 text-truncate"><%= line_item.product.name %></h5>
+                    </div>
+                    <div class="col-4 col-sm-2 text-center">
+                      <span class="badge bg-light text-dark quantity-badge" data-bs-toggle="tooltip" data-bs-placement="top" title="数量">
+                        <i class="fas fa-shopping-bag me-1"></i>
+                        <%= line_item.quantity %> 個
+                      </span>
+                    </div>
+                    <div class="col-5 col-sm-3 text-end">
+                      <span class="text-primary fw-bold price-badge">
+                        ¥<%= number_to_delimited(line_item.amount) %>
+                      </span>
+                    </div>
+                    <div class="col-3 col-sm-2 text-end">
+                      <%= link_to line_item_path(line_item), 
+                          class: "btn btn-link text-danger delete-btn", 
+                          data: { 
+                            turbo_method: :delete,
+                            bs_toggle: "tooltip",
+                            bs_placement: "top",
+                            bs_title: "カートから削除"
+                          } do %>
+                        <i class="far fa-trash-alt"></i>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="card__total-price col-3 text-center">
-                <%= line_item.amount %> 円
-              </div>
-               <div class="card__btn-trash col-1">
-              <%= link_to line_item_path(line_item), data: { turbo_method: :delete } do %>
-              <i class="far fa-trash-alt"></i>
-              <% end %>
-            </div>
             </div>
           </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-3 p-sm-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">小計</h5>
+              <span class="text-primary fw-bold fs-4 total-badge">
+                ¥<%= number_to_delimited(@cart.sub_total) %>
+              </span>
+            </div>
+            <%= link_to "購入する", payments_checkout_path, 
+                class: 'btn btn-primary w-100 py-2 checkout-btn',
+                data: { bs_toggle: "tooltip", bs_placement: "top", bs_title: "決済に進む" } %>
+          </div>
         </div>
-      <% end %>
+      </div>
     </div>
-    <div class="cart__sub-total">
-      小計： <%= @cart.sub_total %> 円
-    </div>
-    <%= link_to "購入する", payments_checkout_path, class: 'cart__purchase btn btn-primary' %>
   <% else %>
-    <div class="cart__empty">
-      カートに商品が入っていません。
+    <div class="text-center py-5">
+      <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+      <p class="text-muted">カートに商品が入っていません。</p>
     </div>
   <% end %>
 </div>
+
+<style>
+.product-cart-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.card {
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.quantity-badge {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.quantity-badge:hover {
+  background-color: #e9ecef;
+}
+
+.price-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  text-decoration: none;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.delete-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 4px;
+  transform: scale(1.1);
+}
+
+.total-badge {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.checkout-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 576px) {
+  .product-cart-img {
+    height: 80px;
+  }
+  
+  .card-title {
+    font-size: 0.9rem;
+  }
+  
+  .quantity-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .price-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .card-body {
+    padding: 0.5rem !important;
+  }
+
+  .cart-summary .card-body {
+    padding: 1rem !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('turbo:load', function() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+})
+</script>

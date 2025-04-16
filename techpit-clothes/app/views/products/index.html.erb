@@ -4,25 +4,146 @@
   <p class="text-center text-white top-img-text">Techpit Clothes</p>
 </div>
 
-<div class="container">
-  <div class="top__title text-center">
+<div class="container py-4">
+  <div class="top__title text-center mb-4">
     All Products
   </div>
-  <div class="row">
+  <div class="row g-3 g-md-4">
     <% @products.each do |product| %>
-      <%= link_to product_path(product.id), class: "col-lg-4 col-md-6" do %>
-        <div class="card">
-          <%= image_tag product.image, class: "card-img" %>
-          <div class="card-body">
-            <p class="card-title">
-              <%= product.name %>
-            </p>
-            <p class="card-text">
-              ¥<%= number_to_delimited(product.price) %>
-            </p>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <%= link_to product_path(product.id), class: "product-card", data: { bs_toggle: "tooltip", bs_placement: "top", bs_title: "詳細を見る" } do %>
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="product-image-wrapper">
+              <%= image_tag product.image, class: "card-img-top" %>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title mb-2"><%= product.name %></h5>
+              <p class="card-text text-primary fw-bold">
+                <span class="price-badge">¥<%= number_to_delimited(product.price) %></span>
+              </p>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>
+
+<style>
+.top-img {
+  background-image: url("<%= asset_path('top.jpg') %>");
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.top-img-text {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.top__title {
+  font-size: 32px;
+  color: #4a4a4a;
+  letter-spacing: 2px;
+  padding: 20px 0 40px;
+}
+
+.product-card {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.product-image-wrapper {
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.card {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.card-title {
+  font-size: 1rem;
+  color: #212529;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .price-badge {
+  background-color: #e9ecef;
+}
+
+.card-text {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .top-img {
+    background-image: url("<%= asset_path('top2.jpg') %>");
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-image-wrapper {
+    padding-bottom: 75%;
+  }
+  
+  .card-title {
+    font-size: 0.9rem;
+  }
+  
+  .card-text {
+    font-size: 1rem;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('turbo:load', function() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+})
+</script>
