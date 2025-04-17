@@ -27,6 +27,22 @@ Product 1<-->* LineItem *<-->* Cart
 5. 決済完了: [GET] `/payments/success` (`PaymentsController#success`)  
    - `@cart.line_items.delete_all` でカートをクリア
 
+## 可視化 (Mermaid)
+
+```mermaid
+erDiagram
+    Product ||--o{ LineItem : contains
+    Cart ||--o{ LineItem : contains
+```
+
+```mermaid
+flowchart LR
+    P["商品一覧/詳細表示"] --> L["カート操作"]
+    L --> C["カート表示"]
+    C --> R["決済準備 (/payments/checkout)"]
+    R --> S["決済完了 (/payments/success)"]
+```
+
 ## データ関係
 - `session[:cart_id]` → Cart → has_many LineItem → belongs_to Product  
 - 小計計算: `Cart#sub_total` → `LineItem#amount` の合計
